@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot: CurStack 1`] = `
+Object {
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "testCurBucket43ED1B2B": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "BucketName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "cur-",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              "-",
+              Object {
+                "Ref": "AWS::Region",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testCurBucketPolicyE42EACB7": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "testCurBucket43ED1B2B",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:GetBucketAcl",
+                "s3:GetBucketPolicy",
+              ],
+              "Condition": Object {
+                "StringEquals": Object {
+                  "aws:SourceAccount": Object {
+                    "Ref": "AWS::AccountId",
+                  },
+                  "aws:SourceArn": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":cur:us-east-1:",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":definition/*",
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "billingreports.amazonaws.com",
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testCurBucket43ED1B2B",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:PutObject",
+              "Condition": Object {
+                "StringEquals": Object {
+                  "aws:SourceAccount": Object {
+                    "Ref": "AWS::AccountId",
+                  },
+                  "aws:SourceArn": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":cur:us-east-1:",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":definition/*",
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "billingreports.amazonaws.com",
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "testCurBucket43ED1B2B",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "testReportDefinitiontestReportDefinitionResource65DECF67": Object {
+      "DependsOn": Array [
+        "testCurBucketPolicyE42EACB7",
+      ],
+      "Properties": Object {
+        "Compression": "GZIP",
+        "Format": "textORcsv",
+        "RefreshClosedReports": true,
+        "ReportName": "ReportDefinitionName",
+        "ReportVersioning": "OVERWRITE_REPORT",
+        "S3Bucket": Object {
+          "Ref": "testCurBucket43ED1B2B",
+        },
+        "S3Prefix": "/",
+        "S3Region": "us-east-1",
+        "TimeUnit": "DAILY",
+      },
+      "Type": "AWS::CUR::ReportDefinition",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
