@@ -49,7 +49,7 @@
     "jsii-docgen": "^9.0.10",
     "jsii-pacmak": "^1.84.0",
     "npm-check-updates": "^16",
-    "projen": "^0.71.110",
+    "projen": "^0.71.118",
     "ts-jest": "^27",
     "typescript": "^5.1.3"
   },
