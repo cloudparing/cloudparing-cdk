@@ -27,7 +27,10 @@ new AwsCdkConstructLibrary({
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],
   jsiiVersion: '~5.0.0',
-  constructsVersion: '10.2.61',
+  constructsVersion: '10.2.65',
+  jestOptions: {
+    jestVersion: '^29',
+  },
 });
 
 const cdkApp = new AwsCdkTypeScriptApp({
@@ -42,7 +45,10 @@ const cdkApp = new AwsCdkTypeScriptApp({
   keywords: ['aws', 'cdk'],
   deps: ['@cloudparing/aws-cdk-lib'],
   cdkVersionPinning: true,
-  constructsVersion: '10.2.61',
+  constructsVersion: '10.2.65',
+  jestOptions: {
+    jestVersion: '^29',
+  },
 });
 
 cdkApp.addFields({ private: true });
