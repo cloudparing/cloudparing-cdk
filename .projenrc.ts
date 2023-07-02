@@ -1,11 +1,13 @@
 import { LernaTypescriptProject } from 'lerna-projen';
 import { AwsCdkConstructLibrary, AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
+import { DependabotScheduleInterval } from 'projen/lib/github';
+import { NpmAccess } from 'projen/lib/javascript';
 
 const CDK_VERSION = '2.1.0';
 
 const root = new LernaTypescriptProject({
   defaultReleaseBranch: 'main',
-  devDeps: ['lerna-projen', 'constructs@^10.0.5'],
+  devDeps: ['lerna-projen', 'constructs@^10.0.5', 'esbuild'],
   peerDeps: ['jsii-rosetta@~5.1.2'],
   name: 'cloudparing-cdk',
   projenrcTs: true,
@@ -15,6 +17,8 @@ const root = new LernaTypescriptProject({
   dependabot: true,
   dependabotOptions: {
     labels: ['auto-approve'],
+    ignoreProjen: true,
+    scheduleInterval: DependabotScheduleInterval.WEEKLY,
   },
   release: true,
   releaseToNpm: true,
@@ -29,6 +33,7 @@ new AwsCdkConstructLibrary({
   repositoryUrl: 'github.com/cloudparing/cloudparing-cdk',
   defaultReleaseBranch: 'main',
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   parent: root,
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],
@@ -37,6 +42,7 @@ new AwsCdkConstructLibrary({
   jestOptions: {
     jestVersion: '^29',
   },
+  npmAccess: NpmAccess.PUBLIC,
 });
 
 const cdkApp = new AwsCdkTypeScriptApp({
