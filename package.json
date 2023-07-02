@@ -94,8 +94,8 @@
   "types": "lib/index.d.ts",
   "private": true,
   "workspaces": [
-    "packages/aws-cdk-lib",
-    "packages/aws-cdk-app"
+    "/home/runner/work/cloudparing-cdk/cloudparing-cdk/packages/aws-cdk-lib",
+    "/home/runner/work/cloudparing-cdk/cloudparing-cdk/packages/aws-cdk-app"
   ],
   "packages": [
     "packages/aws-cdk-lib",
