@@ -27,7 +27,10 @@ new AwsCdkConstructLibrary({
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],
   jsiiVersion: '~5.0.0',
-  constructsVersion: '10.2.61',
+  constructsVersion: '10.2.65',
+  jestOptions: {
+    jestVersion: '^29',
+  },
 });
 
 const cdkApp = new AwsCdkTypeScriptApp({
@@ -42,7 +45,10 @@ const cdkApp = new AwsCdkTypeScriptApp({
   keywords: ['aws', 'cdk'],
   deps: ['@cloudparing/aws-cdk-lib'],
   cdkVersionPinning: true,
-  constructsVersion: '10.2.61',
+  constructsVersion: '10.2.65',
+  jestOptions: {
+    jestVersion: '^29',
+  },
 });
 
 cdkApp.addFields({ private: true });
@@ -50,6 +56,9 @@ cdkApp.addFields({ private: true });
 // resolved @types/babel__traverse/index.d.ts:321:9 - error TS1110: Type expected
 root.package.addPackageResolutions('@types/babel__traverse@7.18.2');
 
-root.addFields({ private: true, workspaces: root.subprojects.map((p) => p.outdir.replace('/Users/pwner/Src/cloudparing/cloudparing-cdk/', '')) });
+root.addFields({
+  private: true,
+  workspaces: ['packages/aws-cdk-lib', 'packages/aws-cdk-app'],
+});
 root.addDevDeps('lerna@^7');
 root.synth();
