@@ -12,6 +12,12 @@ const root = new LernaTypescriptProject({
   sampleCode: false,
   useWorkspaces: true,
   license: 'Apache-2.0',
+  dependabot: true,
+  dependabotOptions: {
+    labels: ['auto-approve'],
+  },
+  release: true,
+  releaseToNpm: true,
 });
 
 new AwsCdkConstructLibrary({
