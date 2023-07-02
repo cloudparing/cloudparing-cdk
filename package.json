@@ -36,7 +36,7 @@
     "lerna": "^7",
     "lerna-projen": "^0.1.134",
     "npm-check-updates": "^16",
-    "projen": "^0.71.110",
+    "projen": "^0.71.119",
     "standard-version": "^9",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
