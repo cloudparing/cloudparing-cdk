@@ -1,28 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`snapshot: CurStack 1`] = `
-Object {
-  "Parameters": Object {
-    "BootstrapVersion": Object {
+{
+  "Parameters": {
+    "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
       "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
-  "Resources": Object {
-    "testCurBucket43ED1B2B": Object {
+  "Resources": {
+    "testCurBucket43ED1B2B": {
       "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "BucketName": Object {
-          "Fn::Join": Array [
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
             "",
-            Array [
+            [
               "cur-",
-              Object {
+              {
                 "Ref": "AWS::AccountId",
               },
               "-",
-              Object {
+              {
                 "Ref": "AWS::Region",
               },
             ],
@@ -32,33 +32,33 @@ Object {
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "testCurBucketPolicyE42EACB7": Object {
-      "Properties": Object {
-        "Bucket": Object {
+    "testCurBucketPolicyE42EACB7": {
+      "Properties": {
+        "Bucket": {
           "Ref": "testCurBucket43ED1B2B",
         },
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "s3:GetBucketAcl",
                 "s3:GetBucketPolicy",
               ],
-              "Condition": Object {
-                "StringEquals": Object {
-                  "aws:SourceAccount": Object {
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
                     "Ref": "AWS::AccountId",
                   },
-                  "aws:SourceArn": Object {
-                    "Fn::Join": Array [
+                  "aws:SourceArn": {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":cur:us-east-1:",
-                        Object {
+                        {
                           "Ref": "AWS::AccountId",
                         },
                         ":definition/*",
@@ -68,33 +68,33 @@ Object {
                 },
               },
               "Effect": "Allow",
-              "Principal": Object {
+              "Principal": {
                 "Service": "billingreports.amazonaws.com",
               },
-              "Resource": Object {
-                "Fn::GetAtt": Array [
+              "Resource": {
+                "Fn::GetAtt": [
                   "testCurBucket43ED1B2B",
                   "Arn",
                 ],
               },
             },
-            Object {
+            {
               "Action": "s3:PutObject",
-              "Condition": Object {
-                "StringEquals": Object {
-                  "aws:SourceAccount": Object {
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
                     "Ref": "AWS::AccountId",
                   },
-                  "aws:SourceArn": Object {
-                    "Fn::Join": Array [
+                  "aws:SourceArn": {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":cur:us-east-1:",
-                        Object {
+                        {
                           "Ref": "AWS::AccountId",
                         },
                         ":definition/*",
@@ -104,15 +104,15 @@ Object {
                 },
               },
               "Effect": "Allow",
-              "Principal": Object {
+              "Principal": {
                 "Service": "billingreports.amazonaws.com",
               },
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
+                  [
+                    {
+                      "Fn::GetAtt": [
                         "testCurBucket43ED1B2B",
                         "Arn",
                       ],
@@ -128,17 +128,17 @@ Object {
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "testReportDefinitiontestReportDefinitionResource65DECF67": Object {
-      "DependsOn": Array [
+    "testReportDefinitiontestReportDefinitionResource65DECF67": {
+      "DependsOn": [
         "testCurBucketPolicyE42EACB7",
       ],
-      "Properties": Object {
+      "Properties": {
         "Compression": "GZIP",
         "Format": "textORcsv",
         "RefreshClosedReports": true,
         "ReportName": "ReportDefinitionName",
         "ReportVersioning": "OVERWRITE_REPORT",
-        "S3Bucket": Object {
+        "S3Bucket": {
           "Ref": "testCurBucket43ED1B2B",
         },
         "S3Prefix": "/",
@@ -148,22 +148,22 @@ Object {
       "Type": "AWS::CUR::ReportDefinition",
     },
   },
-  "Rules": Object {
-    "CheckBootstrapVersion": Object {
-      "Assertions": Array [
-        Object {
-          "Assert": Object {
-            "Fn::Not": Array [
-              Object {
-                "Fn::Contains": Array [
-                  Array [
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
                     "1",
                     "2",
                     "3",
                     "4",
                     "5",
                   ],
-                  Object {
+                  {
                     "Ref": "BootstrapVersion",
                   },
                 ],
