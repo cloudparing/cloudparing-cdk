@@ -30,7 +30,6 @@ test('snapshot: cur report spec\'d out', () => {
     reportName: 'ReportDefinitionName',
     s3Bucket: curBucket,
     s3Prefix: 'ReportDefinitionPrefix',
-    // s3Region: 'ReportDefinitionRegion',
     timeUnit: 'MONTHLY',
     additionalArtifacts: ['REDSHIFT'],
     additionalSchemaElements: ['ReportDefinitionAdditionalSchemaElements'],

@@ -8,7 +8,6 @@ export class ReportDefinition extends Construct {
     super(scope, id);
 
     const s3Region = props.s3Bucket.urlForObject('/').replace('https://s3.', '').replace(/\..*/, '');
-    console.log(`>>>>> s3Region: ${s3Region}`);
     // https://s3.us-west-1.amazonaws.com/onlybucket
     new cdk.aws_cur.CfnReportDefinition(this, `${id}-Resource`, {
       reportName: props.reportName,
