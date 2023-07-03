@@ -33,7 +33,6 @@ new AwsCdkConstructLibrary({
   repositoryUrl: 'github.com/cloudparing/cloudparing-cdk',
   defaultReleaseBranch: 'main',
   cdkVersion: CDK_VERSION,
-  cdkVersionPinning: true,
   parent: root,
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],
