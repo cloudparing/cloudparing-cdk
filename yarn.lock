@@ -2647,15 +2647,15 @@ console-control-strings@^1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-constructs@10.2.65, constructs@^10.2.65:
+constructs@10.2.65:
   version "10.2.65"
   resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.2.65.tgz#fc64fbc52f809a53e785e7a3923ce2aa5e0b8b86"
   integrity sha512-KV2cjo8l12F6aX5o89wLKmTtvlCwNRPeXyyQyiPjvjIZaA7N6P0CO+VHAIdrKJ8o0dlbbPE9AJtWzCvbpLhYvA==
 
-constructs@^10.0.5:
-  version "10.2.61"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.2.61.tgz#73c0da7e47296e8227798729b135e0f240c89763"
-  integrity sha512-8l099E1XPLN6VgUitXP6wPHLl25vc8RgxePhbCY/iRF9RGErSy6JHnI3AJU8XJ3KMaUZqhq+q9q3o+KoKM1eVw==
+constructs@^10.0.5, constructs@^10.2.65:
+  version "10.2.68"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.2.68.tgz#15dc5e3edc2c2751d8bb73a337587f75d3480b5b"
+  integrity sha512-0XXn0L67Df8Rbjjn+hoLsrf68f/TS99W/I5JDe4ri49zaSXVxBIVPqhx2tELVum7wN3G6mISYDppnZC/k5uUYg==
 
 conventional-changelog-angular@6.0.0:
   version "6.0.0"
