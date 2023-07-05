@@ -42,6 +42,10 @@ new AwsCdkConstructLibrary({
     jestVersion: '^29',
   },
   npmAccess: NpmAccess.PUBLIC,
+  publishToPypi: {
+    distName: 'cloudparing.aws-cdk-lib',
+    module: 'cloudparing.aws_cdk_lib',
+  },
 });
 
 const cdkApp = new AwsCdkTypeScriptApp({
