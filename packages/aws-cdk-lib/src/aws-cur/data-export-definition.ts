@@ -1,9 +1,7 @@
 import * as path from 'path';
-import * as cdk from 'aws-cdk-lib';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
@@ -12,25 +10,18 @@ import {
   DataExportDefinitionProps,
 } from './data-export-definition.types';
 
-const curRegion = 'us-east-1'; // cur only available in us-east-1
 export class DataExportDefinition extends Construct {
   constructor(scope: Construct, id: string, props: DataExportDefinitionProps) {
     super(scope, id);
 
     /** Custom Resource until data exports is supported natively via CloudFormation  */
-    const customResourceFunction = new NodejsFunction(
+    const customResourceFunction = new Function(
       this,
       'DataExportDefinitionCustomResourceOnEventHandlerFunction',
       {
         timeout: Duration.seconds(30),
         runtime: Runtime.NODEJS_18_X,
-        entry: path.join(
-          path.resolve('..'),
-          'aws-cdk-lib',
-          'src',
-          'aws-cur',
-          'data-export-event-handler.ts',
-        ),
+        code: Code.fromAsset(path.join(__dirname, 'data-export-event-handler')),
         role: new iam.Role(this, 'DataExportDefinitionCustomResourceRole', {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
           inlinePolicies: {
@@ -50,14 +41,20 @@ export class DataExportDefinition extends Construct {
                 }),
               ],
             }),
+            S3BucketPolicy: new iam.PolicyDocument({
+              statements: [
+                new iam.PolicyStatement({
+                  sid: 'S3Actions',
+                  effect: iam.Effect.ALLOW,
+                  actions: ['s3:putBucketPolicy', 's3:getBucketPolicy'],
+                  resources: [props.bucket.bucketArn],
+                }),
+              ],
+            }),
           },
         }),
-        handler: 'handler',
+        handler: 'index.handler',
         memorySize: 1024,
-        bundling: {
-          minify: true,
-          target: 'es2020',
-        },
       },
     );
 
@@ -75,42 +72,8 @@ export class DataExportDefinition extends Construct {
       resourceType: 'Custom::DataExportDefinition',
       properties: props.properties,
     });
-
-    // Add bucket policy https://docs.aws.amazon.com/cur/latest/userguide/cur-s3.html
-    const policy = this.addBucketPolicy(props.bucket);
-    if (policy) {
-      this.node.addDependency(policy);
-    }
-  }
-
-  private addBucketPolicy(
-    bucket: cdk.aws_s3.IBucket,
-  ): cdk.aws_s3.BucketPolicy | undefined {
-    bucket.addToResourcePolicy(
-      new cdk.aws_iam.PolicyStatement({
-        effect: cdk.aws_iam.Effect.ALLOW,
-        actions: ['s3:PutObject', 's3:GetBucketPolicy'],
-        principals: [
-          new cdk.aws_iam.ServicePrincipal('billingreports.amazonaws.com'),
-          new cdk.aws_iam.ServicePrincipal('bcm-data-exports.amazonaws.com'),
-        ],
-        resources: [bucket.bucketArn, bucket.arnForObjects('*')],
-        conditions: {
-          StringLike: {
-            'aws:SourceArn': [
-              `arn:${cdk.Aws.PARTITION}:cur:${curRegion}:${cdk.Aws.ACCOUNT_ID}:definition/*`,
-              `arn:${cdk.Aws.PARTITION}:bcm-data-exports:${curRegion}:${cdk.Aws.ACCOUNT_ID}:export/*`,
-            ],
-            'aws:SourceAccount': `${cdk.Aws.ACCOUNT_ID}`,
-          },
-        },
-      }),
-    );
-
-    return bucket.policy;
   }
 }
-
 export class Cur2ExportDefinition extends DataExportDefinition {
   constructor(scope: Construct, id: string, props: Cur2ExportProps) {
     const s3Region = props.bucket

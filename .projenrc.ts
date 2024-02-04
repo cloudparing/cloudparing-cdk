@@ -54,7 +54,7 @@ new AwsCdkConstructLibrary({
     module: 'cloudparing.aws_cdk_lib',
   },
   devDeps: ['@types/aws-lambda'],
-  bundledDeps: ['@aws-sdk/client-bcm-data-exports', 'aws-lambda'],
+  bundledDeps: ['@aws-sdk/client-bcm-data-exports', '@aws-sdk/client-s3', 'aws-lambda'],
 });
 
 const cdkApp = new AwsCdkTypeScriptApp({

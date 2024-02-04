@@ -6,7 +6,7 @@ CDK constructs focused on monitoring and reducing cloud infrastructure costs.
 
 <details><summary><strong>TypeScript</strong></summary>
 
-> https://www.npmjs.com/package/@cloudparing/aws-cdk-lib
+> npm i @cloudparing/aws-cdk-lib --save
 
 In your `package.json`:
 
