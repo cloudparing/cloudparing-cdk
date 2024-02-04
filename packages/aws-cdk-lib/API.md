@@ -2,7 +2,6 @@
 
 CDK constructs focused on monitoring and reducing cloud infrastructure costs.
 
-
 ## Installation
 
 <details><summary><strong>TypeScript</strong></summary>
@@ -14,7 +13,7 @@ In your `package.json`:
 ```json
 {
   "dependencies": {
-    "@cloudparing/aws-cdk-lib": "^1.0.0",
+    "@cloudparing/aws-cdk-lib": "^0.0.0",
 
     // peer dependencies
     "aws-cdk-lib": "^2.65.0",
@@ -28,7 +27,25 @@ In your `package.json`:
 
 ## Features
 
-### Cost and Usage Report (CUR)
+### Cost and Usage Report (CUR) v2 Report
+
+```ts
+
+    const curBucket =
+      props.bucket ||
+      new cdk.aws_s3.Bucket(this, `Cur2Bucket`, {
+        bucketName: `cur2-${cdk.Aws.ACCOUNT_ID}-${cdk.Aws.REGION}`,
+      });
+
+    new Cur2ExportDefinition(this, `Cur2ExportDefinition`, {
+      name: 'cur2-daily-csv',
+      description: props.exportDescription,
+      bucket: curBucket,
+    });
+
+```
+
+### Legacy Cost and Usage Report (CUR)
 
 An L2 construct and CDK stack for configuring the AWS Cost and Usage Report.
 
@@ -44,7 +61,7 @@ An L2 construct and CDK stack for configuring the AWS Cost and Usage Report.
 
 **Example using the provided Stack:**
 ```
-import { CurStack } from '@cloudparing/aws-cdk-lib';
+import { CurStack, Cur2Stack } from '@cloudparing/aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 
 // for development, use account/region from cdk cli
@@ -59,6 +76,12 @@ new CurStack(app, 'curStack-dev', {
   env: devEnv,
   stackName: 'CurStack',
   reportName: 'cur-daily-csv',
+});
+
+new Cur2Stack(app, 'cur2Stack-dev', {
+  env: devEnv,
+  stackName: 'Cur2Stack',
+  name: 'cur2-daily-csv',
 });
 
 app.synth();
