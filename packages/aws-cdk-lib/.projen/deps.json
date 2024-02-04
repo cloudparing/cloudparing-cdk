@@ -1,37 +1,27 @@
 {
   "dependencies": [
     {
+      "name": "@types/aws-lambda",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "version": "^29",
       "type": "build"
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^18",
       "type": "build"
     },
     {
       "name": "@typescript-eslint/eslint-plugin",
-      "version": "^5",
+      "version": "^6",
       "type": "build"
     },
     {
       "name": "@typescript-eslint/parser",
-      "version": "^5",
-      "type": "build"
-    },
-    {
-      "name": "aws-cdk-lib",
-      "version": "2.1.0",
-      "type": "build"
-    },
-    {
-      "name": "constructs",
-      "version": "10.2.65",
-      "type": "build"
-    },
-    {
-      "name": "eslint-import-resolver-node",
+      "version": "^6",
       "type": "build"
     },
     {
@@ -70,13 +60,13 @@
       "type": "build"
     },
     {
-      "name": "jsii",
-      "version": "~5.0.0",
+      "name": "jsii-rosetta",
+      "version": "~5.2.0",
       "type": "build"
     },
     {
-      "name": "npm-check-updates",
-      "version": "^16",
+      "name": "jsii",
+      "version": "~5.2.0",
       "type": "build"
     },
     {
@@ -93,13 +83,21 @@
       "type": "build"
     },
     {
+      "name": "@aws-sdk/client-bcm-data-exports",
+      "type": "bundled"
+    },
+    {
+      "name": "aws-lambda",
+      "type": "bundled"
+    },
+    {
       "name": "aws-cdk-lib",
-      "version": "^2.1.0",
+      "version": "^2.112.0",
       "type": "peer"
     },
     {
       "name": "constructs",
-      "version": "^10.2.65",
+      "version": "^10.3.0",
       "type": "peer"
     }
   ],

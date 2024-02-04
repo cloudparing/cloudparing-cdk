@@ -131,7 +131,7 @@ export interface ReportDefinitionProps extends ReportDefinitionOptions {
   readonly s3Bucket: cdk.aws_s3.IBucket;
 }
 
-export const ReportDefinitionDefaults : ReportDefinitionOptions = {
+export const ReportDefinitionDefaults: ReportDefinitionOptions = {
   compression: 'GZIP',
   format: 'textORcsv',
   refreshClosedReports: true,

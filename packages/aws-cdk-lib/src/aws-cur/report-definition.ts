@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { ReportDefinitionDefaults, ReportDefinitionProps } from './types';
+import { ReportDefinitionDefaults, ReportDefinitionProps } from './report-definition.types';
 
 const curRegion = 'us-east-1'; // cur only available in us-east-1
 export class ReportDefinition extends Construct {
