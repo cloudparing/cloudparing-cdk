@@ -8,9 +8,9 @@ import {
   ListExportsCommand,
   ListExportsResponse,
   UpdateExportCommand,
-} from "@aws-sdk/client-bcm-data-exports";
+} from '@aws-sdk/client-bcm-data-exports';
 
-import { S3Client, PutBucketPolicyCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutBucketPolicyCommand } from '@aws-sdk/client-s3';
 import {
   CloudFormationCustomResourceCreateEvent,
   CloudFormationCustomResourceDeleteEvent,
@@ -18,16 +18,16 @@ import {
   CloudFormationCustomResourceHandler,
   CloudFormationCustomResourceUpdateEvent,
   Context,
-} from "aws-lambda";
+} from 'aws-lambda';
 import {
   CompressionFormat,
   ExportVersioning,
-} from "../data-export-definition.types";
-import { TimeUnit } from "../report-definition.types";
+} from '../data-export-definition.types';
+import { TimeUnit } from '../report-definition.types';
 
 export interface Cur2ExportParameters {
   readonly ServiceToken: string;
-  readonly ExportType: "COST_AND_USAGE";
+  readonly ExportType: 'COST_AND_USAGE';
   readonly ExportName: string;
   readonly ExportDescription: string;
   readonly S3Bucket: string;
@@ -43,39 +43,39 @@ export interface Cur2ExportParameters {
 
 export const handler: CloudFormationCustomResourceHandler = async (
   event: CloudFormationCustomResourceEvent,
-  context: Context
+  context: Context,
 ): Promise<void> => {
   try {
     switch (event.RequestType) {
-      case "Create":
+      case 'Create':
         return await createDataExport(
           event as CloudFormationCustomResourceCreateEvent,
-          context
+          context,
         );
-      case "Update":
+      case 'Update':
         return await updateDataExport(
           event as CloudFormationCustomResourceUpdateEvent,
-          context
+          context,
         );
-      case "Delete":
+      case 'Delete':
         return await deleteDataExport(
-          event as CloudFormationCustomResourceDeleteEvent
+          event as CloudFormationCustomResourceDeleteEvent,
         );
     }
   } catch (error) {
     // Handle error
-    console.error("Error:", error);
+    console.error('Error:', error);
     throw error;
   }
 };
 const createDataExport = async (
   event: CloudFormationCustomResourceCreateEvent,
-  context: Context
+  context: Context,
 ): Promise<void> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
   const s3 = new S3Client();
   await s3.send(
-    new PutBucketPolicyCommand(createPutBucketPolicyInput(props, context))
+    new PutBucketPolicyCommand(createPutBucketPolicyInput(props, context)),
   );
 
   const client = new BCMDataExportsClient();
@@ -88,38 +88,38 @@ const createDataExport = async (
 
 const createPutBucketPolicyInput = (
   props: Cur2ExportParameters,
-  context: Context
+  context: Context,
 ): any => {
-  const arnParts = context.invokedFunctionArn.split(":");
+  const arnParts = context.invokedFunctionArn.split(':');
   const accountId = arnParts[4];
   const region = arnParts[3];
   const partition = arnParts[1];
   return {
     Bucket: props.S3Bucket,
     Policy: JSON.stringify({
-      Version: "2012-10-17",
+      Version: '2012-10-17',
       Statement: [
         {
-          Sid: "EnableAWSDataExportsToWriteToS3AndCheckPolicy",
-          Effect: "Allow",
+          Sid: 'EnableAWSDataExportsToWriteToS3AndCheckPolicy',
+          Effect: 'Allow',
           Principal: {
             Service: [
-              "bcm-data-exports.amazonaws.com",
-              "billingreports.amazonaws.com",
+              'bcm-data-exports.amazonaws.com',
+              'billingreports.amazonaws.com',
             ],
           },
-          Action: ["s3:PutObject", "s3:GetBucketPolicy"],
+          Action: ['s3:PutObject', 's3:GetBucketPolicy'],
           Resource: [
             `arn:${partition}:s3:::${props.S3Bucket}`,
             `arn:${partition}:s3:::${props.S3Bucket}/*`,
           ],
           Condition: {
             StringLike: {
-              "aws:SourceArn": [
+              'aws:SourceArn': [
                 `arn:${partition}:cur:${region}:${accountId}:definition/*`,
                 `arn:${partition}:bcm-data-exports:${region}:${accountId}:export/*`,
               ],
-              "aws:SourceAccount": `${accountId}`,
+              'aws:SourceAccount': `${accountId}`,
             },
           },
         },
@@ -130,14 +130,14 @@ const createPutBucketPolicyInput = (
 
 const updateDataExport = async (
   event: CloudFormationCustomResourceUpdateEvent,
-  context: Context
+  context: Context,
 ): Promise<void> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
   const s3 = new S3Client();
   await s3.send(
-    new PutBucketPolicyCommand(createPutBucketPolicyInput(props, context))
+    new PutBucketPolicyCommand(createPutBucketPolicyInput(props, context)),
   );
- 
+
   const client = new BCMDataExportsClient();
   const foundExport = await findExportByName(client, props.ExportName);
   if (!foundExport) {
@@ -152,7 +152,7 @@ const updateDataExport = async (
 };
 
 const deleteDataExport = async (
-  event: CloudFormationCustomResourceDeleteEvent
+  event: CloudFormationCustomResourceDeleteEvent,
 ): Promise<void> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
   const client = new BCMDataExportsClient();
@@ -169,17 +169,17 @@ const deleteDataExport = async (
 const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
   return {
     Name: props.ExportName,
-    Description: props.ExportDescription || "",
+    Description: props.ExportDescription || '',
     DataQuery: {
       QueryStatement: buildSQL(props.SelectedColumns),
       TableConfigurations: {
         COST_AND_USAGE_REPORT: {
-          TIME_GRANULARITY: props.TimeUnit || "DAILY",
-          INCLUDE_RESOURCES: props.IncludeResourceIds ? "TRUE" : "FALSE",
+          TIME_GRANULARITY: props.TimeUnit || 'DAILY',
+          INCLUDE_RESOURCES: props.IncludeResourceIds ? 'TRUE' : 'FALSE',
           INCLUDE_SPLIT_COST_ALLOCATION_DATA: props.SplitCostAllocationData
-            ? "TRUE"
-            : "FALSE",
-          INCLUDE_MANUAL_DISCOUNT_COMPATIBILITY: "FALSE",
+            ? 'TRUE'
+            : 'FALSE',
+          INCLUDE_MANUAL_DISCOUNT_COMPATIBILITY: 'FALSE',
         },
       },
     },
@@ -189,27 +189,27 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
         S3Prefix: props.S3Prefix,
         S3Region: props.S3Region,
         S3OutputConfigurations: {
-          OutputType: "CUSTOM",
+          OutputType: 'CUSTOM',
           Format:
-            props.CompressionFormat === "Parquet" ? "PARQUET" : "TEXT_OR_CSV",
+            props.CompressionFormat === 'Parquet' ? 'PARQUET' : 'TEXT_OR_CSV',
           Compression:
-            props.CompressionFormat === "Parquet" ? "PARQUET" : "GZIP",
+            props.CompressionFormat === 'Parquet' ? 'PARQUET' : 'GZIP',
           Overwrite:
-            props.ExportVersioning === "OVERWRITE_EXPORT"
-              ? "OVERWRITE_REPORT"
-              : "CREATE_NEW_REPORT",
+            props.ExportVersioning === 'OVERWRITE_EXPORT'
+              ? 'OVERWRITE_REPORT'
+              : 'CREATE_NEW_REPORT',
         },
       },
     },
     RefreshCadence: {
-      Frequency: "SYNCHRONOUS",
+      Frequency: 'SYNCHRONOUS',
     },
   };
 };
 
 const findExportByName = async (
   client: BCMDataExportsClient,
-  name: string
+  name: string,
 ): Promise<ExportReference | undefined> => {
   let nextToken: string | undefined = undefined;
 
@@ -218,7 +218,7 @@ const findExportByName = async (
       new ListExportsCommand({
         MaxResults: 50,
         NextToken: nextToken,
-      })
+      }),
     )) as ListExportsResponse;
     if (exports.Exports === undefined) {
       return undefined;
@@ -235,5 +235,5 @@ const findExportByName = async (
 };
 
 const buildSQL = (columns: string[]): string => {
-  return `SELECT ${columns.join(", ")} FROM COST_AND_USAGE_REPORT`;
+  return `SELECT ${columns.join(', ')} FROM COST_AND_USAGE_REPORT`;
 };
