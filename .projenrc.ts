@@ -3,6 +3,7 @@ import {
   ApprovalLevel,
   AwsCdkConstructLibrary,
   AwsCdkTypeScriptApp,
+  LambdaRuntime,
 } from 'projen/lib/awscdk';
 import { DependabotScheduleInterval } from 'projen/lib/github';
 import { NpmAccess } from 'projen/lib/javascript';
@@ -50,12 +51,24 @@ new AwsCdkConstructLibrary({
   },
   npmAccess: NpmAccess.PUBLIC,
   publishToPypi: {
-    distName: 'cloudparing.aws-cdk-lib',
-    module: 'cloudparing.aws_cdk_lib',
+    distName: 'cloudparing.aws-cdk',
+    module: 'cloudparing.aws_cdk',
+  },
+  publishToNuget: {
+    dotNetNamespace: 'Cloudparing.AwsCdk',
+    packageId: 'Cloudparing.AwsCdk',
   },
   devDeps: ['@types/aws-lambda'],
   bundledDeps: ['@aws-sdk/client-bcm-data-exports', '@aws-sdk/client-s3', 'aws-lambda'],
+  lambdaOptions: {
+    runtime: LambdaRuntime.NODEJS_18_X,
+    bundlingOptions: {
+      externals: ['aws-sdk'],
+      sourcemap: true,
+    },
+  },
 });
+
 
 const cdkApp = new AwsCdkTypeScriptApp({
   description: 'The cloudparing CDK app',

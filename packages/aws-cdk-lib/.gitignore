@@ -41,3 +41,5 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+/assets/
+!/src/aws-cur/data-export-function.ts
