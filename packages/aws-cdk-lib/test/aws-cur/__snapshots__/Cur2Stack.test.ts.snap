@@ -1,0 +1,1762 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot: CurStack 1`] = `
+{
+  "Description": "Description of export",
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+      "DependsOn": [
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "Roles": [
+          {
+            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2Bucket96DD9821": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "",
+            [
+              "cur22-",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              "-",
+              {
+                "Ref": "AWS::Region",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testCur2BucketPolicy98B88634": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:GetBucketPolicy",
+              ],
+              "Condition": {
+                "StringLike": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId",
+                  },
+                  "aws:SourceArn": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":cur:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":definition/*",
+                        ],
+                      ],
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":bcm-data-exports:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":export/*",
+                        ],
+                      ],
+                    },
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "billingreports.amazonaws.com",
+                  "bcm-data-exports.amazonaws.com",
+                ],
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2Bucket96DD9821",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2Bucket96DD9821",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResource8510D87A": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "CompressionFormat": "GZIP_CSV",
+        "ExportDescription": "",
+        "ExportName": "ReportDefinitionName",
+        "ExportType": "COST_AND_USAGE",
+        "ExportVersioning": "OVERWRITE_EXPORT",
+        "IncludeResourceIds": false,
+        "S3Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "S3Prefix": "",
+        "S3Region": "us-east-1",
+        "SelectedColumns": [
+          "bill_bill_type",
+          "bill_billing_entity",
+          "bill_billing_period_end_date",
+          "bill_billing_period_start_date",
+          "bill_invoice_id",
+          "bill_invoicing_entity",
+          "bill_payer_account_id",
+          "bill_payer_account_name",
+          "cost_category",
+          "discount",
+          "discount_bundled_discount",
+          "discount_total_discount",
+          "identity_line_item_id",
+          "identity_time_interval",
+          "line_item_availability_zone",
+          "line_item_blended_cost",
+          "line_item_blended_rate",
+          "line_item_currency_code",
+          "line_item_legal_entity",
+          "line_item_line_item_description",
+          "line_item_line_item_type",
+          "line_item_net_unblended_cost",
+          "line_item_net_unblended_rate",
+          "line_item_normalization_factor",
+          "line_item_normalized_usage_amount",
+          "line_item_operation",
+          "line_item_product_code",
+          "line_item_tax_type",
+          "line_item_unblended_cost",
+          "line_item_unblended_rate",
+          "line_item_usage_account_id",
+          "line_item_usage_account_name",
+          "line_item_usage_amount",
+          "line_item_usage_end_date",
+          "line_item_usage_start_date",
+          "line_item_usage_type",
+          "pricing_currency",
+          "pricing_lease_contract_length",
+          "pricing_offering_class",
+          "pricing_public_on_demand_cost",
+          "pricing_public_on_demand_rate",
+          "pricing_purchase_option",
+          "pricing_rate_code",
+          "pricing_rate_id",
+          "pricing_term",
+          "pricing_unit",
+          "product",
+          "product_comment",
+          "product_fee_code",
+          "product_fee_description",
+          "product_from_location",
+          "product_from_location_type",
+          "product_from_region_code",
+          "product_instance_family",
+          "product_instance_type",
+          "product_instancesku",
+          "product_location",
+          "product_location_type",
+          "product_operation",
+          "product_pricing_unit",
+          "product_product_family",
+          "product_region_code",
+          "product_servicecode",
+          "product_sku",
+          "product_to_location",
+          "product_to_location_type",
+          "product_to_region_code",
+          "product_usagetype",
+          "reservation_amortized_upfront_cost_for_usage",
+          "reservation_amortized_upfront_fee_for_billing_period",
+          "reservation_availability_zone",
+          "reservation_effective_cost",
+          "reservation_end_time",
+          "reservation_modification_status",
+          "reservation_net_amortized_upfront_cost_for_usage",
+          "reservation_net_amortized_upfront_fee_for_billing_period",
+          "reservation_net_effective_cost",
+          "reservation_net_recurring_fee_for_usage",
+          "reservation_net_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_net_unused_recurring_fee",
+          "reservation_net_upfront_value",
+          "reservation_normalized_units_per_reservation",
+          "reservation_number_of_reservations",
+          "reservation_recurring_fee_for_usage",
+          "reservation_reservation_a_r_n",
+          "reservation_start_time",
+          "reservation_subscription_id",
+          "reservation_total_reserved_normalized_units",
+          "reservation_total_reserved_units",
+          "reservation_units_per_reservation",
+          "reservation_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_unused_normalized_unit_quantity",
+          "reservation_unused_quantity",
+          "reservation_unused_recurring_fee",
+          "reservation_upfront_value",
+          "resource_tags",
+          "savings_plan_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_end_time",
+          "savings_plan_instance_type_family",
+          "savings_plan_net_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_net_recurring_commitment_for_billing_period",
+          "savings_plan_net_savings_plan_effective_cost",
+          "savings_plan_offering_type",
+          "savings_plan_payment_option",
+          "savings_plan_purchase_term",
+          "savings_plan_recurring_commitment_for_billing_period",
+          "savings_plan_region",
+          "savings_plan_savings_plan_a_r_n",
+          "savings_plan_savings_plan_effective_cost",
+          "savings_plan_savings_plan_rate",
+          "savings_plan_start_time",
+          "savings_plan_total_commitment_to_date",
+          "savings_plan_used_commitment",
+        ],
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+            "Arn",
+          ],
+        },
+        "SplitCostAllocationData": false,
+        "TimeUnit": "DAILY",
+      },
+      "Type": "Custom::DataExportDefinition",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "testCur2ExportDefinitionDataExportFunction817F345A",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventLogRetentionD37411C2": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2ExportDefinitionDataExportFunction817F345A",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2ExportDefinitionDataExportFunction817F345A",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "Roles": [
+          {
+            "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2ExportDefinitionDataExportFunction817F345A": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "45cec7e7ad2f3440b7f34231a6b56fc36f5a022c216ddefe41878aa6259ef65f.zip",
+        },
+        "Description": "src/aws-cur/data-export.lambda.ts",
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportFunctionRole7A2179C6": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "bcm-data-exports:*",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CreateCurExportsInDataExports",
+                },
+                {
+                  "Action": "cur:PutReportDefinition",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CurDataAccess",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "BcmDataExportPolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`snapshot: CurStack includeResourceIds 1`] = `
+{
+  "Description": "Description of export",
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+      "DependsOn": [
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "Roles": [
+          {
+            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2Bucket96DD9821": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "",
+            [
+              "cur22-",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              "-",
+              {
+                "Ref": "AWS::Region",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testCur2BucketPolicy98B88634": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:GetBucketPolicy",
+              ],
+              "Condition": {
+                "StringLike": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId",
+                  },
+                  "aws:SourceArn": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":cur:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":definition/*",
+                        ],
+                      ],
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":bcm-data-exports:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":export/*",
+                        ],
+                      ],
+                    },
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "billingreports.amazonaws.com",
+                  "bcm-data-exports.amazonaws.com",
+                ],
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2Bucket96DD9821",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2Bucket96DD9821",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResource8510D87A": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "CompressionFormat": "GZIP_CSV",
+        "ExportDescription": "",
+        "ExportName": "ReportDefinitionName",
+        "ExportType": "COST_AND_USAGE",
+        "ExportVersioning": "OVERWRITE_EXPORT",
+        "IncludeResourceIds": true,
+        "S3Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "S3Prefix": "",
+        "S3Region": "us-east-1",
+        "SelectedColumns": [
+          "bill_bill_type",
+          "bill_billing_entity",
+          "bill_billing_period_end_date",
+          "bill_billing_period_start_date",
+          "bill_invoice_id",
+          "bill_invoicing_entity",
+          "bill_payer_account_id",
+          "bill_payer_account_name",
+          "cost_category",
+          "discount",
+          "discount_bundled_discount",
+          "discount_total_discount",
+          "identity_line_item_id",
+          "identity_time_interval",
+          "line_item_availability_zone",
+          "line_item_blended_cost",
+          "line_item_blended_rate",
+          "line_item_currency_code",
+          "line_item_legal_entity",
+          "line_item_line_item_description",
+          "line_item_line_item_type",
+          "line_item_net_unblended_cost",
+          "line_item_net_unblended_rate",
+          "line_item_normalization_factor",
+          "line_item_normalized_usage_amount",
+          "line_item_operation",
+          "line_item_product_code",
+          "line_item_tax_type",
+          "line_item_unblended_cost",
+          "line_item_unblended_rate",
+          "line_item_usage_account_id",
+          "line_item_usage_account_name",
+          "line_item_usage_amount",
+          "line_item_usage_end_date",
+          "line_item_usage_start_date",
+          "line_item_usage_type",
+          "pricing_currency",
+          "pricing_lease_contract_length",
+          "pricing_offering_class",
+          "pricing_public_on_demand_cost",
+          "pricing_public_on_demand_rate",
+          "pricing_purchase_option",
+          "pricing_rate_code",
+          "pricing_rate_id",
+          "pricing_term",
+          "pricing_unit",
+          "product",
+          "product_comment",
+          "product_fee_code",
+          "product_fee_description",
+          "product_from_location",
+          "product_from_location_type",
+          "product_from_region_code",
+          "product_instance_family",
+          "product_instance_type",
+          "product_instancesku",
+          "product_location",
+          "product_location_type",
+          "product_operation",
+          "product_pricing_unit",
+          "product_product_family",
+          "product_region_code",
+          "product_servicecode",
+          "product_sku",
+          "product_to_location",
+          "product_to_location_type",
+          "product_to_region_code",
+          "product_usagetype",
+          "reservation_amortized_upfront_cost_for_usage",
+          "reservation_amortized_upfront_fee_for_billing_period",
+          "reservation_availability_zone",
+          "reservation_effective_cost",
+          "reservation_end_time",
+          "reservation_modification_status",
+          "reservation_net_amortized_upfront_cost_for_usage",
+          "reservation_net_amortized_upfront_fee_for_billing_period",
+          "reservation_net_effective_cost",
+          "reservation_net_recurring_fee_for_usage",
+          "reservation_net_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_net_unused_recurring_fee",
+          "reservation_net_upfront_value",
+          "reservation_normalized_units_per_reservation",
+          "reservation_number_of_reservations",
+          "reservation_recurring_fee_for_usage",
+          "reservation_reservation_a_r_n",
+          "reservation_start_time",
+          "reservation_subscription_id",
+          "reservation_total_reserved_normalized_units",
+          "reservation_total_reserved_units",
+          "reservation_units_per_reservation",
+          "reservation_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_unused_normalized_unit_quantity",
+          "reservation_unused_quantity",
+          "reservation_unused_recurring_fee",
+          "reservation_upfront_value",
+          "resource_tags",
+          "savings_plan_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_end_time",
+          "savings_plan_instance_type_family",
+          "savings_plan_net_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_net_recurring_commitment_for_billing_period",
+          "savings_plan_net_savings_plan_effective_cost",
+          "savings_plan_offering_type",
+          "savings_plan_payment_option",
+          "savings_plan_purchase_term",
+          "savings_plan_recurring_commitment_for_billing_period",
+          "savings_plan_region",
+          "savings_plan_savings_plan_a_r_n",
+          "savings_plan_savings_plan_effective_cost",
+          "savings_plan_savings_plan_rate",
+          "savings_plan_start_time",
+          "savings_plan_total_commitment_to_date",
+          "savings_plan_used_commitment",
+        ],
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+            "Arn",
+          ],
+        },
+        "SplitCostAllocationData": false,
+        "TimeUnit": "DAILY",
+      },
+      "Type": "Custom::DataExportDefinition",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "testCur2ExportDefinitionDataExportFunction817F345A",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventLogRetentionD37411C2": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2ExportDefinitionDataExportFunction817F345A",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2ExportDefinitionDataExportFunction817F345A",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "Roles": [
+          {
+            "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2ExportDefinitionDataExportFunction817F345A": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "45cec7e7ad2f3440b7f34231a6b56fc36f5a022c216ddefe41878aa6259ef65f.zip",
+        },
+        "Description": "src/aws-cur/data-export.lambda.ts",
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportFunctionRole7A2179C6": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "bcm-data-exports:*",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CreateCurExportsInDataExports",
+                },
+                {
+                  "Action": "cur:PutReportDefinition",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CurDataAccess",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "BcmDataExportPolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`snapshot: CurStack splitCostAllocationData 1`] = `
+{
+  "Description": "Description of export",
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+      "DependsOn": [
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "Roles": [
+          {
+            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2Bucket96DD9821": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "",
+            [
+              "cur22-",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              "-",
+              {
+                "Ref": "AWS::Region",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testCur2BucketPolicy98B88634": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:GetBucketPolicy",
+              ],
+              "Condition": {
+                "StringLike": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId",
+                  },
+                  "aws:SourceArn": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":cur:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":definition/*",
+                        ],
+                      ],
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":bcm-data-exports:us-east-1:",
+                          {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":export/*",
+                        ],
+                      ],
+                    },
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "billingreports.amazonaws.com",
+                  "bcm-data-exports.amazonaws.com",
+                ],
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2Bucket96DD9821",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2Bucket96DD9821",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResource8510D87A": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "CompressionFormat": "GZIP_CSV",
+        "ExportDescription": "",
+        "ExportName": "ReportDefinitionName",
+        "ExportType": "COST_AND_USAGE",
+        "ExportVersioning": "OVERWRITE_EXPORT",
+        "IncludeResourceIds": false,
+        "S3Bucket": {
+          "Ref": "testCur2Bucket96DD9821",
+        },
+        "S3Prefix": "",
+        "S3Region": "us-east-1",
+        "SelectedColumns": [
+          "bill_bill_type",
+          "bill_billing_entity",
+          "bill_billing_period_end_date",
+          "bill_billing_period_start_date",
+          "bill_invoice_id",
+          "bill_invoicing_entity",
+          "bill_payer_account_id",
+          "bill_payer_account_name",
+          "cost_category",
+          "discount",
+          "discount_bundled_discount",
+          "discount_total_discount",
+          "identity_line_item_id",
+          "identity_time_interval",
+          "line_item_availability_zone",
+          "line_item_blended_cost",
+          "line_item_blended_rate",
+          "line_item_currency_code",
+          "line_item_legal_entity",
+          "line_item_line_item_description",
+          "line_item_line_item_type",
+          "line_item_net_unblended_cost",
+          "line_item_net_unblended_rate",
+          "line_item_normalization_factor",
+          "line_item_normalized_usage_amount",
+          "line_item_operation",
+          "line_item_product_code",
+          "line_item_tax_type",
+          "line_item_unblended_cost",
+          "line_item_unblended_rate",
+          "line_item_usage_account_id",
+          "line_item_usage_account_name",
+          "line_item_usage_amount",
+          "line_item_usage_end_date",
+          "line_item_usage_start_date",
+          "line_item_usage_type",
+          "pricing_currency",
+          "pricing_lease_contract_length",
+          "pricing_offering_class",
+          "pricing_public_on_demand_cost",
+          "pricing_public_on_demand_rate",
+          "pricing_purchase_option",
+          "pricing_rate_code",
+          "pricing_rate_id",
+          "pricing_term",
+          "pricing_unit",
+          "product",
+          "product_comment",
+          "product_fee_code",
+          "product_fee_description",
+          "product_from_location",
+          "product_from_location_type",
+          "product_from_region_code",
+          "product_instance_family",
+          "product_instance_type",
+          "product_instancesku",
+          "product_location",
+          "product_location_type",
+          "product_operation",
+          "product_pricing_unit",
+          "product_product_family",
+          "product_region_code",
+          "product_servicecode",
+          "product_sku",
+          "product_to_location",
+          "product_to_location_type",
+          "product_to_region_code",
+          "product_usagetype",
+          "reservation_amortized_upfront_cost_for_usage",
+          "reservation_amortized_upfront_fee_for_billing_period",
+          "reservation_availability_zone",
+          "reservation_effective_cost",
+          "reservation_end_time",
+          "reservation_modification_status",
+          "reservation_net_amortized_upfront_cost_for_usage",
+          "reservation_net_amortized_upfront_fee_for_billing_period",
+          "reservation_net_effective_cost",
+          "reservation_net_recurring_fee_for_usage",
+          "reservation_net_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_net_unused_recurring_fee",
+          "reservation_net_upfront_value",
+          "reservation_normalized_units_per_reservation",
+          "reservation_number_of_reservations",
+          "reservation_recurring_fee_for_usage",
+          "reservation_reservation_a_r_n",
+          "reservation_start_time",
+          "reservation_subscription_id",
+          "reservation_total_reserved_normalized_units",
+          "reservation_total_reserved_units",
+          "reservation_units_per_reservation",
+          "reservation_unused_amortized_upfront_fee_for_billing_period",
+          "reservation_unused_normalized_unit_quantity",
+          "reservation_unused_quantity",
+          "reservation_unused_recurring_fee",
+          "reservation_upfront_value",
+          "resource_tags",
+          "savings_plan_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_end_time",
+          "savings_plan_instance_type_family",
+          "savings_plan_net_amortized_upfront_commitment_for_billing_period",
+          "savings_plan_net_recurring_commitment_for_billing_period",
+          "savings_plan_net_savings_plan_effective_cost",
+          "savings_plan_offering_type",
+          "savings_plan_payment_option",
+          "savings_plan_purchase_term",
+          "savings_plan_recurring_commitment_for_billing_period",
+          "savings_plan_region",
+          "savings_plan_savings_plan_a_r_n",
+          "savings_plan_savings_plan_effective_cost",
+          "savings_plan_savings_plan_rate",
+          "savings_plan_start_time",
+          "savings_plan_total_commitment_to_date",
+          "savings_plan_used_commitment",
+        ],
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+            "Arn",
+          ],
+        },
+        "SplitCostAllocationData": true,
+        "TimeUnit": "DAILY",
+      },
+      "Type": "Custom::DataExportDefinition",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "testCur2ExportDefinitionDataExportFunction817F345A",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventLogRetentionD37411C2": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEvent1248231C",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testCur2ExportDefinitionDataExportFunction817F345A",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "testCur2ExportDefinitionDataExportFunction817F345A",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleDefaultPolicyC77EEE99",
+        "Roles": [
+          {
+            "Ref": "testCur2ExportDefinitionDataExportDefinitionCustomResourceProviderframeworkonEventServiceRoleB8A3CE3C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testCur2ExportDefinitionDataExportFunction817F345A": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+        "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "45cec7e7ad2f3440b7f34231a6b56fc36f5a022c216ddefe41878aa6259ef65f.zip",
+        },
+        "Description": "src/aws-cur/data-export.lambda.ts",
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "testCur2ExportDefinitionDataExportFunctionRole7A2179C6",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testCur2ExportDefinitionDataExportFunctionRole7A2179C6": {
+      "DependsOn": [
+        "testCur2BucketPolicy98B88634",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "bcm-data-exports:*",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CreateCurExportsInDataExports",
+                },
+                {
+                  "Action": "cur:PutReportDefinition",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "CurDataAccess",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "BcmDataExportPolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

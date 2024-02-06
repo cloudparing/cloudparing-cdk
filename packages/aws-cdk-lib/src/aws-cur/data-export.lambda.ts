@@ -34,8 +34,8 @@ export interface Cur2ExportParameters {
   readonly TimeUnit: TimeUnit;
   readonly CompressionFormat: CompressionFormat;
   readonly ExportVersioning: ExportVersioning;
-  readonly IncludeResourceIds: boolean;
-  readonly SplitCostAllocationData: boolean;
+  readonly IncludeResourceIds: string;
+  readonly SplitCostAllocationData: string;
   readonly SelectedColumns: string[];
 }
 
@@ -83,7 +83,6 @@ const createDataExport = async (
   event: CloudFormationCustomResourceCreateEvent,
   context: Context,
 ): Promise<CdkCustomResourceResponse> => {
-  console.log(`>>>>>> createDataExport  ${JSON.stringify(event)}`);
   const props = event.ResourceProperties as Cur2ExportParameters;
   const client = new BCMDataExportsClient();
   const command = new CreateExportCommand({
@@ -103,7 +102,6 @@ const updateDataExport = async (
   context: Context,
 ): Promise<CdkCustomResourceResponse> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
-  console.log(`>>>>>> updateDataExport ${JSON.stringify(props)}`);
   const client = new BCMDataExportsClient();
   const command = new UpdateExportCommand({
     ExportArn: event.PhysicalResourceId,
@@ -121,8 +119,6 @@ const deleteDataExport = async (
   event: CloudFormationCustomResourceDeleteEvent,
   context: Context,
 ): Promise<CdkCustomResourceResponse> => {
-  const props = event.ResourceProperties as Cur2ExportParameters;
-  console.log(`>>>>>> deleteDataExport ${JSON.stringify(props)}`);
   const client = new BCMDataExportsClient();
   const command = new DeleteExportCommand({
     ExportArn: event.PhysicalResourceId,
@@ -143,9 +139,15 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
       QueryStatement: buildSQL(props.SelectedColumns),
       TableConfigurations: {
         COST_AND_USAGE_REPORT: {
-          TIME_GRANULARITY: 'DAILY',
-          INCLUDE_RESOURCES: 'FALSE',
-          INCLUDE_SPLIT_COST_ALLOCATION_DATA: 'FALSE',
+          TIME_GRANULARITY: props.TimeUnit,
+          INCLUDE_RESOURCES: /^true$/i.test(props.IncludeResourceIds)
+            ? 'TRUE'
+            : 'FALSE',
+          INCLUDE_SPLIT_COST_ALLOCATION_DATA: /^true$/i.test(
+            props.SplitCostAllocationData,
+          )
+            ? 'TRUE'
+            : 'FALSE',
           INCLUDE_MANUAL_DISCOUNT_COMPATIBILITY: 'FALSE',
         },
       },
@@ -157,9 +159,14 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
         S3Region: props.S3Region,
         S3OutputConfigurations: {
           OutputType: 'CUSTOM',
-          Format: 'TEXT_OR_CSV',
-          Compression: 'GZIP',
-          Overwrite: 'OVERWRITE_REPORT',
+          Format:
+            props.CompressionFormat === 'GZIP_CSV' ? 'TEXT_OR_CSV' : 'PARQUET',
+          Compression:
+            props.CompressionFormat === 'GZIP_CSV' ? 'GZIP' : 'PARQUET',
+          Overwrite:
+            props.ExportVersioning === 'OVERWRITE_EXPORT'
+              ? 'OVERWRITE_REPORT'
+              : 'CREATE_NEW_REPORT',
         },
       },
     },
@@ -171,4 +178,8 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
 
 const buildSQL = (columns: string[]): string => {
   return `SELECT ${columns.join(', ')} FROM COST_AND_USAGE_REPORT`;
+};
+
+export const testModules = {
+  cur2ExportParametersToExport: cur2ExportParametersToExport,
 };
