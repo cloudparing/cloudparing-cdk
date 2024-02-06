@@ -47,5 +47,6 @@ junit.xml
 /lib
 /dist/
 !/.eslintrc.json
+!/.github/workflows/release_cloudparing-aws-cdk-lib.yml
 !/lerna.json
 !/.projenrc.ts

@@ -59,7 +59,7 @@ An L2 construct and CDK stack for configuring the AWS Cost and Usage Report.
     });
 ```
 
-**Example using the provided Stack:**
+**Example using the provided Stacks:**
 ```
 import { CurStack, Cur2Stack } from '@cloudparing/aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';

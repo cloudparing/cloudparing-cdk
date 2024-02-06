@@ -26,30 +26,43 @@ const root = new LernaTypescriptProject({
     ignoreProjen: true,
     scheduleInterval: DependabotScheduleInterval.WEEKLY,
   },
-  release: true,
-  releaseToNpm: true,
   allowLibraryDependencies: true,
   minNodeVersion: '18.16.0',
 });
 
 new AwsCdkConstructLibrary({
-  authorAddress: 'james@cloudparing.net',
-  author: 'James Ayvaz',
-  description: 'The cloudparing CDK library',
   name: '@cloudparing/aws-cdk-lib',
-  license: 'Apache-2.0',
   repositoryUrl: 'github.com/cloudparing/cloudparing-cdk',
+  author: 'ayvazj',
+  authorName: 'James Ayvaz',
+  authorAddress: 'james@cloudparing.net',
+
+  description: 'The cloudparing CDK library',
+  license: 'Apache-2.0',
+
   defaultReleaseBranch: 'main',
-  cdkVersion: CDK_VERSION,
-  parent: root,
-  outdir: 'packages/aws-cdk-lib',
-  keywords: ['aws', 'cdk', 'cur', 'cost'],
-  jsiiVersion: '~5.2.0',
-  constructsVersion: CONSTRUCTS_VERSION,
-  jestOptions: {
-    jestVersion: '^29',
-  },
+
   npmAccess: NpmAccess.PUBLIC,
+
+  cdkVersion: CDK_VERSION,
+  cdkVersionPinning: false,
+  constructsVersion: CONSTRUCTS_VERSION,
+
+  docgen: true,
+  eslint: true,
+
+  githubOptions: {
+    mergify: true,
+  },
+
+  dependabot: true,
+  dependabotOptions: {
+    ignoreProjen: true,
+    scheduleInterval: DependabotScheduleInterval.WEEKLY,
+  },
+
+  release: true,
+  releaseToNpm: true,
   publishToPypi: {
     distName: 'cloudparing.aws-cdk',
     module: 'cloudparing.aws_cdk',
@@ -58,8 +71,24 @@ new AwsCdkConstructLibrary({
     dotNetNamespace: 'Cloudparing.AwsCdk',
     packageId: 'Cloudparing.AwsCdk',
   },
+  publishToGo: {
+    moduleName: 'github.com/cloudparing/cloudparing-cdk/go/awscdk',
+  },
+  parent: root,
+  outdir: 'packages/aws-cdk-lib',
+  keywords: ['aws', 'cdk', 'cur', 'cost'],
+  jsiiVersion: '~5.2.0',
+
+  jestOptions: {
+    jestVersion: '^29',
+  },
+
   devDeps: ['@types/aws-lambda'],
-  bundledDeps: ['@aws-sdk/client-bcm-data-exports', '@aws-sdk/client-s3', 'aws-lambda'],
+  bundledDeps: [
+    '@aws-sdk/client-bcm-data-exports',
+    '@aws-sdk/client-s3',
+    'aws-lambda',
+  ],
   lambdaOptions: {
     runtime: LambdaRuntime.NODEJS_18_X,
     bundlingOptions: {
@@ -68,7 +97,6 @@ new AwsCdkConstructLibrary({
     },
   },
 });
-
 
 const cdkApp = new AwsCdkTypeScriptApp({
   description: 'The cloudparing CDK app',
