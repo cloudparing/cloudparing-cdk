@@ -3,18 +3,19 @@ import {
   CreateExportCommand,
   CreateExportCommandInput,
   DeleteExportCommand,
+  // DeleteExportCommand,
   Export,
-  ExportReference,
-  ListExportsCommand,
-  ListExportsResponse,
   UpdateExportCommand,
+  // UpdateExportCommand,
 } from '@aws-sdk/client-bcm-data-exports';
 import {
+  CdkCustomResourceEvent,
+  CdkCustomResourceHandler,
+  CdkCustomResourceResponse,
   CloudFormationCustomResourceCreateEvent,
   CloudFormationCustomResourceDeleteEvent,
-  CloudFormationCustomResourceEvent,
-  CloudFormationCustomResourceHandler,
   CloudFormationCustomResourceUpdateEvent,
+  Context,
 } from 'aws-lambda';
 import {
   CompressionFormat,
@@ -33,27 +34,31 @@ export interface Cur2ExportParameters {
   readonly TimeUnit: TimeUnit;
   readonly CompressionFormat: CompressionFormat;
   readonly ExportVersioning: ExportVersioning;
-  readonly IncludeResourceIds: boolean;
-  readonly SplitCostAllocationData: boolean;
+  readonly IncludeResourceIds: string;
+  readonly SplitCostAllocationData: string;
   readonly SelectedColumns: string[];
 }
 
-export const handler: CloudFormationCustomResourceHandler = async (
-  event: CloudFormationCustomResourceEvent,
-): Promise<void> => {
+export const handler: CdkCustomResourceHandler = async (
+  event: CdkCustomResourceEvent,
+  context: Context,
+): Promise<CdkCustomResourceResponse> => {
   try {
     switch (event.RequestType) {
       case 'Create':
         return await createDataExport(
           event as CloudFormationCustomResourceCreateEvent,
+          context,
         );
       case 'Update':
         return await updateDataExport(
           event as CloudFormationCustomResourceUpdateEvent,
+          context,
         );
       case 'Delete':
         return await deleteDataExport(
           event as CloudFormationCustomResourceDeleteEvent,
+          context,
         );
     }
   } catch (error) {
@@ -62,47 +67,68 @@ export const handler: CloudFormationCustomResourceHandler = async (
     throw error;
   }
 };
+
+const createResponse = (
+  event: CdkCustomResourceEvent,
+  context: Context,
+): CdkCustomResourceResponse => {
+  return {
+    StackId: event.StackId,
+    RequestId: event.RequestId,
+    LogicalResourceId: event.LogicalResourceId,
+    PhysicalResourceId: context.logGroupName,
+  };
+};
 const createDataExport = async (
   event: CloudFormationCustomResourceCreateEvent,
-): Promise<void> => {
+  context: Context,
+): Promise<CdkCustomResourceResponse> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
   const client = new BCMDataExportsClient();
   const command = new CreateExportCommand({
     Export: cur2ExportParametersToExport(props),
   } as CreateExportCommandInput);
-  await client.send(command);
+
+  const createExportResp = await client.send(command);
+  return {
+    ...createResponse(event, context),
+    PhysicalResourceId: createExportResp.ExportArn,
+    Status: 'SUCCESS',
+  };
 };
 
 const updateDataExport = async (
   event: CloudFormationCustomResourceUpdateEvent,
-): Promise<void> => {
+  context: Context,
+): Promise<CdkCustomResourceResponse> => {
   const props = event.ResourceProperties as Cur2ExportParameters;
   const client = new BCMDataExportsClient();
-  const foundExport = await findExportByName(client, props.ExportName);
-  if (!foundExport) {
-    throw new Error(`Export with name '${props.ExportName}' not found`);
-  }
-
   const command = new UpdateExportCommand({
-    ExportArn: foundExport.ExportArn,
+    ExportArn: event.PhysicalResourceId,
     Export: cur2ExportParametersToExport(props),
   });
-  await client.send(command);
+  const updateExportResp = await client.send(command);
+  return {
+    ...createResponse(event, context),
+    PhysicalResourceId: updateExportResp.ExportArn,
+    Status: 'SUCCESS',
+  };
 };
 
 const deleteDataExport = async (
   event: CloudFormationCustomResourceDeleteEvent,
-): Promise<void> => {
-  const props = event.ResourceProperties as Cur2ExportParameters;
+  context: Context,
+): Promise<CdkCustomResourceResponse> => {
   const client = new BCMDataExportsClient();
-  const foundExport = await findExportByName(client, props.ExportName);
-  if (!foundExport) {
-    throw new Error(`Export with name '${props.ExportName}' not found`);
-  }
   const command = new DeleteExportCommand({
-    ExportArn: foundExport.ExportArn,
+    ExportArn: event.PhysicalResourceId,
   });
-  await client.send(command);
+  const deleteExportResp = await client.send(command);
+  return {
+    ...createResponse(event, context),
+    PhysicalResourceId: deleteExportResp.ExportArn,
+    Status: 'SUCCESS',
+  };
 };
 
 const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
@@ -113,9 +139,13 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
       QueryStatement: buildSQL(props.SelectedColumns),
       TableConfigurations: {
         COST_AND_USAGE_REPORT: {
-          TIME_GRANULARITY: props.TimeUnit || 'DAILY',
-          INCLUDE_RESOURCES: props.IncludeResourceIds ? 'TRUE' : 'FALSE',
-          INCLUDE_SPLIT_COST_ALLOCATION_DATA: props.SplitCostAllocationData
+          TIME_GRANULARITY: props.TimeUnit,
+          INCLUDE_RESOURCES: /^true$/i.test(props.IncludeResourceIds)
+            ? 'TRUE'
+            : 'FALSE',
+          INCLUDE_SPLIT_COST_ALLOCATION_DATA: /^true$/i.test(
+            props.SplitCostAllocationData,
+          )
             ? 'TRUE'
             : 'FALSE',
           INCLUDE_MANUAL_DISCOUNT_COMPATIBILITY: 'FALSE',
@@ -130,9 +160,9 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
         S3OutputConfigurations: {
           OutputType: 'CUSTOM',
           Format:
-            props.CompressionFormat === 'Parquet' ? 'PARQUET' : 'TEXT_OR_CSV',
+            props.CompressionFormat === 'GZIP_CSV' ? 'TEXT_OR_CSV' : 'PARQUET',
           Compression:
-            props.CompressionFormat === 'Parquet' ? 'PARQUET' : 'GZIP',
+            props.CompressionFormat === 'GZIP_CSV' ? 'GZIP' : 'PARQUET',
           Overwrite:
             props.ExportVersioning === 'OVERWRITE_EXPORT'
               ? 'OVERWRITE_REPORT'
@@ -146,33 +176,10 @@ const cur2ExportParametersToExport = (props: Cur2ExportParameters): Export => {
   };
 };
 
-const findExportByName = async (
-  client: BCMDataExportsClient,
-  name: string,
-): Promise<ExportReference | undefined> => {
-  let nextToken: string | undefined = undefined;
-
-  do {
-    const exports = (await client.send(
-      new ListExportsCommand({
-        MaxResults: 50,
-        NextToken: nextToken,
-      }),
-    )) as ListExportsResponse;
-    if (exports.Exports === undefined) {
-      return undefined;
-    }
-    for (const exp of exports.Exports) {
-      if (exp.ExportName === name) {
-        return exp;
-      }
-    }
-    nextToken = exports.NextToken;
-  } while (nextToken);
-
-  return undefined;
-};
-
 const buildSQL = (columns: string[]): string => {
   return `SELECT ${columns.join(', ')} FROM COST_AND_USAGE_REPORT`;
+};
+
+export const testModules = {
+  cur2ExportParametersToExport: cur2ExportParametersToExport,
 };

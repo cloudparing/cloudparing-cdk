@@ -1,9 +1,7 @@
-import * as path from 'path';
 import * as cdk from 'aws-cdk-lib';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Architecture } from 'aws-cdk-lib/aws-lambda';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
@@ -11,53 +9,47 @@ import {
   Cur2ExportProps,
   DataExportDefinitionProps,
 } from './data-export-definition.types';
+import { DataExportFunction } from './data-export-function';
 
 const curRegion = 'us-east-1'; // cur only available in us-east-1
 export class DataExportDefinition extends Construct {
   constructor(scope: Construct, id: string, props: DataExportDefinitionProps) {
     super(scope, id);
 
-    /** Custom Resource until data exports is supported natively via CloudFormation  */
-    const customResourceFunction = new NodejsFunction(
+    // Add bucket policy https://docs.aws.amazon.com/cur/latest/userguide/cur-s3.html
+    const policy = this.addBucketPolicy(props.bucket);
+    if (policy) {
+      this.node.addDependency(policy);
+    }
+
+    const dataExportFunction = new DataExportFunction(
       this,
-      'DataExportDefinitionCustomResourceOnEventHandlerFunction',
+      'DataExportFunction',
       {
         timeout: Duration.seconds(30),
-        runtime: Runtime.NODEJS_18_X,
-        entry: path.join(
-          path.resolve('..'),
-          'aws-cdk-lib',
-          'src',
-          'aws-cur',
-          'data-export-event-handler.ts',
-        ),
-        role: new iam.Role(this, 'DataExportDefinitionCustomResourceRole', {
+        architecture: Architecture.ARM_64,
+        memorySize: 1024,
+        role: new iam.Role(this, 'DataExportFunctionRole', {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
           inlinePolicies: {
             BcmDataExportPolicy: new iam.PolicyDocument({
               statements: [
                 new iam.PolicyStatement({
-                  sid: 'BcmDataExports',
+                  sid: 'CreateCurExportsInDataExports',
                   effect: iam.Effect.ALLOW,
                   actions: ['bcm-data-exports:*'],
                   resources: ['*'],
                 }),
                 new iam.PolicyStatement({
-                  sid: 'CurActions',
+                  sid: 'CurDataAccess',
                   effect: iam.Effect.ALLOW,
-                  actions: ['cur:*'],
+                  actions: ['cur:PutReportDefinition'],
                   resources: ['*'],
                 }),
               ],
             }),
           },
         }),
-        handler: 'handler',
-        memorySize: 1024,
-        bundling: {
-          minify: true,
-          target: 'es2020',
-        },
       },
     );
 
@@ -65,7 +57,7 @@ export class DataExportDefinition extends Construct {
       this,
       'DataExportDefinitionCustomResourceProvider',
       {
-        onEventHandler: customResourceFunction,
+        onEventHandler: dataExportFunction,
         logRetention: RetentionDays.ONE_DAY,
       },
     );
@@ -75,12 +67,6 @@ export class DataExportDefinition extends Construct {
       resourceType: 'Custom::DataExportDefinition',
       properties: props.properties,
     });
-
-    // Add bucket policy https://docs.aws.amazon.com/cur/latest/userguide/cur-s3.html
-    const policy = this.addBucketPolicy(props.bucket);
-    if (policy) {
-      this.node.addDependency(policy);
-    }
   }
 
   private addBucketPolicy(
@@ -110,14 +96,8 @@ export class DataExportDefinition extends Construct {
     return bucket.policy;
   }
 }
-
 export class Cur2ExportDefinition extends DataExportDefinition {
   constructor(scope: Construct, id: string, props: Cur2ExportProps) {
-    const s3Region = props.bucket
-      .urlForObject('/')
-      .replace('https://s3.', '')
-      .replace(/\..*/, '');
-
     super(scope, id, {
       ...props,
       properties: {
@@ -126,7 +106,7 @@ export class Cur2ExportDefinition extends DataExportDefinition {
         ExportDescription: props.description || '',
         S3Bucket: props.bucket.bucketName,
         S3Prefix: props.s3Prefix || '',
-        S3Region: `${s3Region}`,
+        S3Region: curRegion,
         TimeUnit: props.timeUnit || 'DAILY',
         CompressionFormat: props.compressionFormat || 'GZIP_CSV',
         ExportVersioning: props.exportVersioning || 'OVERWRITE_EXPORT',

@@ -25,6 +25,10 @@
       "type": "build"
     },
     {
+      "name": "esbuild",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-typescript",
       "type": "build"
     },
@@ -84,6 +88,10 @@
     },
     {
       "name": "@aws-sdk/client-bcm-data-exports",
+      "type": "bundled"
+    },
+    {
+      "name": "@aws-sdk/client-s3",
       "type": "bundled"
     },
     {
