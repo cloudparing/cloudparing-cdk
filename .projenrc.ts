@@ -77,7 +77,7 @@ new AwsCdkConstructLibrary({
   parent: root,
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],
-  jsiiVersion: '~5.2.0',
+  jsiiVersion: '~5.3.0',
 
   jestOptions: {
     jestVersion: '^29',
