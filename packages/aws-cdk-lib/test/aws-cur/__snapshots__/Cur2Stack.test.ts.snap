@@ -19,7 +19,7 @@ exports[`snapshot: CurStack 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+          "S3Key": "b120b13d9d868c7622e7db1b68bae4c0f82ffd0227b8c15f2cef38e186ff3827.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -28,8 +28,7 @@ exports[`snapshot: CurStack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
-        "Timeout": 900,
+        "Runtime": "nodejs14.x",
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -352,7 +351,7 @@ exports[`snapshot: CurStack 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+          "S3Key": "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
         "Environment": {
@@ -372,7 +371,7 @@ exports[`snapshot: CurStack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs12.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -447,28 +446,12 @@ exports[`snapshot: CurStack 1`] = `
             {
               "Action": "lambda:InvokeFunction",
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "testCur2ExportDefinitionDataExportFunction817F345A",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "testCur2ExportDefinitionDataExportFunction817F345A",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testCur2ExportDefinitionDataExportFunction817F345A",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -493,7 +476,7 @@ exports[`snapshot: CurStack 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "481fa5d318a0e944097c0a54f86e3c182480d8cd8f34b0f5d099fa2f65c9abea.zip",
+          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {
@@ -606,7 +589,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+          "S3Key": "b120b13d9d868c7622e7db1b68bae4c0f82ffd0227b8c15f2cef38e186ff3827.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -615,8 +598,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
-        "Timeout": 900,
+        "Runtime": "nodejs14.x",
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -939,7 +921,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+          "S3Key": "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
         "Environment": {
@@ -959,7 +941,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs12.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1034,28 +1016,12 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
             {
               "Action": "lambda:InvokeFunction",
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "testCur2ExportDefinitionDataExportFunction817F345A",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "testCur2ExportDefinitionDataExportFunction817F345A",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testCur2ExportDefinitionDataExportFunction817F345A",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -1080,7 +1046,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "481fa5d318a0e944097c0a54f86e3c182480d8cd8f34b0f5d099fa2f65c9abea.zip",
+          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {
@@ -1193,7 +1159,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+          "S3Key": "b120b13d9d868c7622e7db1b68bae4c0f82ffd0227b8c15f2cef38e186ff3827.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -1202,8 +1168,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
-        "Timeout": 900,
+        "Runtime": "nodejs14.x",
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -1526,7 +1491,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip",
+          "S3Key": "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (test/test-Cur2ExportDefinition/DataExportDefinitionCustomResourceProvider)",
         "Environment": {
@@ -1546,7 +1511,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs12.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1621,28 +1586,12 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
             {
               "Action": "lambda:InvokeFunction",
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "testCur2ExportDefinitionDataExportFunction817F345A",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "testCur2ExportDefinitionDataExportFunction817F345A",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testCur2ExportDefinitionDataExportFunction817F345A",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -1667,7 +1616,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "481fa5d318a0e944097c0a54f86e3c182480d8cd8f34b0f5d099fa2f65c9abea.zip",
+          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {

@@ -8,7 +8,7 @@ import {
 import { DependabotScheduleInterval } from 'projen/lib/github';
 import { NpmAccess } from 'projen/lib/javascript';
 
-const CDK_VERSION = '2.112.0';
+const CDK_VERSION = '2.1.0';
 const CONSTRUCTS_VERSION = '10.3.0';
 
 const root = new LernaTypescriptProject({
@@ -83,6 +83,11 @@ new AwsCdkConstructLibrary({
     jestVersion: '^29',
   },
 
+  deps: [
+    '@aws-sdk/client-bcm-data-exports',
+    '@aws-sdk/client-s3',
+    'aws-lambda',
+  ],
   devDeps: ['@types/aws-lambda'],
   bundledDeps: [
     '@aws-sdk/client-bcm-data-exports',
