@@ -71,9 +71,6 @@ new AwsCdkConstructLibrary({
     dotNetNamespace: 'Cloudparing.AwsCdk',
     packageId: 'Cloudparing.AwsCdk',
   },
-  publishToGo: {
-    moduleName: 'github.com/cloudparing/cloudparing-cdk/go/awscdk',
-  },
   parent: root,
   outdir: 'packages/aws-cdk-lib',
   keywords: ['aws', 'cdk', 'cur', 'cost'],

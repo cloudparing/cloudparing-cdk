@@ -476,7 +476,7 @@ exports[`snapshot: CurStack 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
+          "S3Key": "0cd930103c0df4752b5a170336cfcc836b48042ea9c8b60b84bb06338fe545a8.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {
@@ -1046,7 +1046,7 @@ exports[`snapshot: CurStack includeResourceIds 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
+          "S3Key": "0cd930103c0df4752b5a170336cfcc836b48042ea9c8b60b84bb06338fe545a8.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {
@@ -1616,7 +1616,7 @@ exports[`snapshot: CurStack splitCostAllocationData 1`] = `
         ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "7f1ef02225814a988ff6bff9f9ff795151c5d5ad3f0c1c00619f552134b106d1.zip",
+          "S3Key": "0cd930103c0df4752b5a170336cfcc836b48042ea9c8b60b84bb06338fe545a8.zip",
         },
         "Description": "src/aws-cur/data-export.lambda.ts",
         "Environment": {
