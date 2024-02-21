@@ -73,6 +73,7 @@ new AwsCdkConstructLibrary({
   },
   publishToGo: {
     moduleName: 'github.com/cloudparing/cloudparing-cdk/go/awscdk',
+    gitBranch: 'publish-go',
   },
   parent: root,
   outdir: 'packages/aws-cdk-lib',
