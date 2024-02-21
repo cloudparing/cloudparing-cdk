@@ -3,7 +3,7 @@
   "description": "The cloudparing CDK library",
   "repository": {
     "type": "git",
-    "url": "github.com/cloudparing/cloudparing-cdk"
+    "url": "https://github.com/cloudparing/cloudparing-cdk"
   },
   "scripts": {
     "build": "npx projen build",

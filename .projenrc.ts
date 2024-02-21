@@ -32,7 +32,7 @@ const root = new LernaTypescriptProject({
 
 new AwsCdkConstructLibrary({
   name: '@cloudparing/aws-cdk-lib',
-  repositoryUrl: 'github.com/cloudparing/cloudparing-cdk',
+  repositoryUrl: 'https://github.com/cloudparing/cloudparing-cdk',
   author: 'ayvazj',
   authorName: 'James Ayvaz',
   authorAddress: 'james@cloudparing.net',
