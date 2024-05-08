@@ -93,10 +93,12 @@
     },
     {
       "name": "@aws-sdk/client-bcm-data-exports",
+      "version": "^3.5",
       "type": "bundled"
     },
     {
       "name": "@aws-sdk/client-s3",
+      "version": "^3.5",
       "type": "bundled"
     },
     {
@@ -115,10 +117,12 @@
     },
     {
       "name": "@aws-sdk/client-bcm-data-exports",
+      "version": "^3.5",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-s3",
+      "version": "^3.5",
       "type": "runtime"
     },
     {

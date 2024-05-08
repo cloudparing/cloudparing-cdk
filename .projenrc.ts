@@ -85,14 +85,14 @@ new AwsCdkConstructLibrary({
   },
 
   deps: [
-    '@aws-sdk/client-bcm-data-exports',
-    '@aws-sdk/client-s3',
+    '@aws-sdk/client-bcm-data-exports@^3.5',
+    '@aws-sdk/client-s3@^3.5',
     'aws-lambda',
   ],
   devDeps: ['@types/aws-lambda'],
   bundledDeps: [
-    '@aws-sdk/client-bcm-data-exports',
-    '@aws-sdk/client-s3',
+    '@aws-sdk/client-bcm-data-exports@^3.5',
+    '@aws-sdk/client-s3@^3.5',
     'aws-lambda',
   ],
   lambdaOptions: {
