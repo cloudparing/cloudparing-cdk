@@ -6820,9 +6820,9 @@ lazystream@^1.0.0:
     readable-stream "^2.0.5"
 
 lerna-projen@^0.1.336:
-  version "0.1.377"
-  resolved "https://registry.yarnpkg.com/lerna-projen/-/lerna-projen-0.1.377.tgz#6b637286fa7864578833e7ec09b81dbaaeece615"
-  integrity sha512-Da0LcaP9qIWzzT4oiUCly3w9ErkYTiBEnCE/PCHWsawP98VAPTuyyzj7NY1EJDq7CMr6HAD7vcQJsn4jeHtW9w==
+  version "0.1.435"
+  resolved "https://registry.yarnpkg.com/lerna-projen/-/lerna-projen-0.1.435.tgz#c134a6f2d5555625f5b973aaa1d408acb6cb5c35"
+  integrity sha512-pZVTBKH3Du6qcWVvfV5//fmLI7KGalOGuEhQBwtUDZmFjEfwvjunalxtVPC+0yHuqHWJyf6NIQ/hNvtDj0a0VQ==
   dependencies:
     commander "^11.1.0"
     fs-extra "^9.1.0"
